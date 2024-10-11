@@ -1,0 +1,23 @@
+name: "setup-whiskers"
+description: "Setup catppuccin/whiskers"
+author: "Catppuccin Org"
+
+inputs:
+  whiskers-version:
+    description: "Semver compatible version of catppuccin/whiskers to install"
+  github-token:
+    description: "GitHub token to use for authentication when installing catppuccin/whiskers"
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: sgoudham/setup-crate@feat/support-unzipped-binaries-diverged
+      with:
+        repo: catppuccin/whiskers@${{ inputs.whiskers-version }}
+        github-token: ${{ inputs.github-token }}
+
+branding:
+  icon: "dollar-sign"
+  color: "yellow"
