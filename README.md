@@ -50,7 +50,7 @@ Equivalent to `=2.5.0`
 
 ### Install 2.x
 
-Equivalent to `>=0.2.0 <0.3.0`
+Equivalent to `>=2.0.0 <3.0.0`
 
 ```yaml
 - uses: catppuccin/setup-whiskers@v1.0.0
