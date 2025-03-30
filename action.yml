@@ -5,6 +5,7 @@ author: "Catppuccin Org"
 inputs:
   whiskers-version:
     description: "Semver compatible version of catppuccin/whiskers to install"
+    required: false
   github-token:
     description: "GitHub token to use for authentication when installing catppuccin/whiskers"
     required: false
@@ -13,10 +14,57 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: sgoudham/setup-crate@feat/support-unzipped-binaries-diverged
-      with:
-        repo: catppuccin/whiskers@${{ inputs.whiskers-version }}
-        github-token: ${{ inputs.github-token }}
+    # https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+    - name: Install GitHub CLI
+      shell: bash
+      if: ${{ env.ACT && runner.os == 'Linux' && !inputs.whiskers-version }}
+      run: |
+        (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+          && sudo mkdir -p -m 755 /etc/apt/keyrings \
+          && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+          && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+          && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+          && sudo apt update \
+          && sudo apt install gh -y
+
+    - name: Extract versions from `*.tera` files
+      if: ${{ !inputs.whiskers-version }}
+      id: find
+      shell: bash
+      run: |
+        echo "VERSION_REQUIREMENTS=$(find . -name "*.tera" -exec sh -c '
+          FILE={}
+          VERSION=$(sed -n "/^---$/,/^---$/p" "$FILE" | yq eval ".whiskers.version" - | head -n 1)
+          echo \"$VERSION\"
+        ' \; | jq -sc)" >> "$GITHUB_OUTPUT"
+
+    - name: Retrieve versions of catppuccin/whiskers
+      if: ${{ !inputs.whiskers-version }}
+      shell: bash
+      id: ghapi
+      run: |
+        echo "WHISKERS_VERSIONS=$(gh api -XGET -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/catppuccin/whiskers/releases -F per_page=100 | jq -c '[.[].tag_name]')" >> "$GITHUB_OUTPUT"
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    - name: Download cargo-binstall
+      uses: cargo-bins/cargo-binstall@main
+
+    - name: Download sgoudham/what-version
+      if: ${{ !inputs.whiskers-version }}
+      shell: bash
+      run: cargo-binstall what-version --version 1.0.0 --no-confirm
+
+    - name: Get Chosen Version
+      if: ${{ !inputs.whiskers-version }}
+      shell: bash
+      id: what_version
+      run: what-version ${{ toJson(steps.find.outputs.VERSION_REQUIREMENTS) }} ${{ toJson(steps.ghapi.outputs.WHISKERS_VERSIONS) }}
+
+    - name: Download catppuccin/whiskers
+      shell: bash
+      run: cargo-binstall catppuccin-whiskers --version ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}  --no-confirm
 
 branding:
   icon: "dollar-sign"
