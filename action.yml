@@ -18,12 +18,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Download BurntSushi/ripgrep
+    - uses: cargo-bins/cargo-binstall@main
       if: ${{ !inputs.whiskers-version }}
-      uses: sgoudham/setup-crate@feat/support-unzipped-binaries-diverged
-      with:
-        repo: BurntSushi/ripgrep@14.1.1
-        github-token: ${{ inputs.github-token }}
+
+    - run: cargo-binstall ripgrep
+      if: ${{ !inputs.whiskers-version }}
+      shell: bash
 
     # https://github.com/cli/cli/blob/trunk/docs/install_linux.md
     - name: Install GitHub CLI
