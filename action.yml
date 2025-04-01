@@ -75,7 +75,7 @@ runs:
       run: |
         mkdir ${{ env.TARGET }}
         curl -sSLo ${{ env.TARGET }}/${{ env.BINARY }} https://github.com/catppuccin/whiskers/releases/download/${{ env.VERSION }}/${{ env.TARGET }}
-        mv -v ${{ env.TARGET }}/${{ env.BINARY }} /root/.cargo/bin/${{ env.BINARY }}
+        sudo mv -v ${{ env.TARGET }}/${{ env.BINARY }} /root/.cargo/bin/${{ env.BINARY }}
       env:
         VERSION: ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}
         BINARY: "whiskers"
