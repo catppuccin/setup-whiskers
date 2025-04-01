@@ -30,7 +30,7 @@ runs:
           && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
           && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
           && sudo apt update \
-          && sudo apt install gh -y
+          && sudo apt install gh sudo -y
 
     - name: Extract versions from `*.tera` files
       if: ${{ !inputs.whiskers-version }}
@@ -52,25 +52,16 @@ runs:
       env:
         GH_TOKEN: ${{ github.token }}
 
-    - name: Download cargo-binstall
-      uses: cargo-bins/cargo-binstall@main
-
     - name: Download sgoudham/what-version
       shell: bash
       run: |
-        mkdir ${{ env.TARGET }}
-        curl -sSLo ${{ env.TARGET }}/${{ env.BINARY }} https://github.com/sgoudham/what-version/releases/download/${{ env.VERSION }}/${{ env.TARGET }}
-        chmod +x ${{ env.TARGET }}/${{ env.BINARY }}
-        echo `pwd`/${{ env.TARGET }} >> $GITHUB_PATH
+        curl -sSLo ${{ env.BINARY }} https://github.com/sgoudham/what-version/releases/download/${{ env.VERSION }}/${{ env.TARGET }}
+        chmod +x ${{ env.BINARY }}
+        sudo mv -v ${{ env.BINARY }} /usr/bin/
       env:
         VERSION: "v0.3.0"
         BINARY: "what-version"
         TARGET: "what-version-x86_64-unknown-linux-gnu"
-
-    # - name: Download sgoudham/what-version
-    #   if: ${{ !inputs.whiskers-version }}
-    #   shell: bash
-    #   run: cargo-binstall what-version --version 0.3.0 --no-confirm --git https://github.com/sgoudham/what-version.git
 
     - name: Get Chosen Version
       if: ${{ !inputs.whiskers-version }}
@@ -80,7 +71,14 @@ runs:
 
     - name: Download catppuccin/whiskers
       shell: bash
-      run: cargo-binstall catppuccin-whiskers --version ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}  --no-confirm
+      run: |
+        curl -sSLo ${{ env.BINARY }} https://github.com/catppuccin/whiskers/releases/download/${{ env.VERSION }}/${{ env.TARGET }}
+        chmod +x ${{ env.BINARY }}
+        sudo mv -v ${{ env.BINARY }} /usr/bin/
+      env:
+        VERSION: ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}
+        BINARY: "whiskers"
+        TARGET: "whiskers-x86_64-unknown-linux-gnu"
 
 branding:
   icon: "dollar-sign"
