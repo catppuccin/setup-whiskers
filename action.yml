@@ -55,9 +55,10 @@ runs:
     - name: Download sgoudham/what-version
       shell: bash
       run: |
-        curl -sSLo ${{ env.BINARY }} https://github.com/sgoudham/what-version/releases/download/${{ env.VERSION }}/${{ env.TARGET }}
-        chmod +x ${{ env.BINARY }}
-        sudo mv -v ${{ env.BINARY }} /usr/bin/
+        mkdir ${{ env.TARGET }}
+        curl -sSLo ${{ env.TARGET }}/${{ env.BINARY }} https://github.com/sgoudham/what-version/releases/download/${{ env.VERSION }}/${{ env.TARGET }}
+        chmod +x ${{ env.TARGET }}/${{ env.BINARY }}
+        echo `pwd`/${{ env.TARGET }} >> $GITHUB_PATH
       env:
         VERSION: "v0.3.0"
         BINARY: "what-version"
@@ -72,9 +73,10 @@ runs:
     - name: Download catppuccin/whiskers
       shell: bash
       run: |
-        curl -sSLo ${{ env.BINARY }} https://github.com/catppuccin/whiskers/releases/download/${{ env.VERSION }}/${{ env.TARGET }}
-        chmod +x ${{ env.BINARY }}
-        sudo mv -v ${{ env.BINARY }} /usr/bin/
+        mkdir ${{ env.TARGET }}
+        curl -sSLo ${{ env.TARGET }}/${{ env.BINARY }} https://github.com/catppuccin/whiskers/releases/download/${{ env.VERSION }}/${{ env.TARGET }}
+        chmod +x ${{ env.TARGET }}/${{ env.BINARY }}
+        echo `pwd`/${{ env.TARGET }} >> $GITHUB_PATH
       env:
         VERSION: ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}
         BINARY: "whiskers"
