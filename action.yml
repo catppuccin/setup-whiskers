@@ -58,7 +58,7 @@ runs:
     - name: Download sgoudham/what-version
       if: ${{ !inputs.whiskers-version }}
       shell: bash
-      run: cargo-binstall what-version --version 0.3.0 --no-confirm
+      run: cargo-binstall what-version --version 1.0.0 --no-confirm
 
     - name: Get Chosen Version
       if: ${{ !inputs.whiskers-version }}
