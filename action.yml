@@ -58,7 +58,7 @@ runs:
     - name: Download sgoudham/what-version
       if: ${{ !inputs.whiskers-version }}
       shell: bash
-      run: cargo-binstall what-version --version 0.3.0 --no-confirm
+      run: cargo-binstall what-version --version 0.3.0 --no-confirm --git https://github.com/sgoudham/what-version.git
 
     - name: Get Chosen Version
       if: ${{ !inputs.whiskers-version }}
@@ -68,7 +68,7 @@ runs:
 
     - name: Download catppuccin/whiskers
       shell: bash
-      run: cargo-binstall catppuccin-whiskers --version ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}  --no-confirm
+      run: cargo-binstall catppuccin-whiskers --version ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}  --no-confirm --git https://github.com/catppuccin/whiskers.git
 
 branding:
   icon: "dollar-sign"
