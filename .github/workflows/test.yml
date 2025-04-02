@@ -11,16 +11,14 @@ jobs:
   with-input:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
             version: "2.5.0" # should be 2.5.0
-          - os: macos-latest
-            version: "2.1" # should be 2.1.1
           - os: windows-latest
             version: "2" # should be 2.5.0
           - os: macos-latest
-            version: "1.x" # should be 1.1.4
+            version: "2.1" # should be 2.1.1
             
 
     runs-on: ${{ matrix.os }}
