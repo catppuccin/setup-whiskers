@@ -6,10 +6,6 @@ inputs:
   whiskers-version:
     description: "Semver compatible version of catppuccin/whiskers to install"
     required: false
-  dirs:
-    description: "Space-separated list of directories to scan for *.tera files"
-    required: false
-    default: "."
   github-token:
     description: "GitHub token to use for authentication when installing catppuccin/whiskers"
     required: false
@@ -37,7 +33,7 @@ runs:
       id: find
       shell: bash
       run: |
-        echo "VERSION_REQUIREMENTS=$(find ${{ inputs.dirs }} -name "*.tera" -exec sh -c '
+        echo "VERSION_REQUIREMENTS=$(find . -name "*.tera" -exec sh -c '
           FILE={}
           VERSION=$(sed -n "/^---$/,/^---$/p" "$FILE" | yq eval ".whiskers.version" - | head -n 1)
           echo \"$VERSION\"
