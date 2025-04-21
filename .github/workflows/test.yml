@@ -14,11 +14,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            version: "2.5.0" # should be 2.5.1
+            version: "^2" # should be latest 2.x
           - os: windows-latest
-            version: "2" # should be 2.5.1
+            version: "2.5.0" # should be 2.5.0
           - os: macos-latest
-            version: "2.1" # should be 2.1.1
+            version: "2.3" # should be 2.3.0
             
 
     runs-on: ${{ matrix.os }}
