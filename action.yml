@@ -60,11 +60,16 @@ runs:
       if: ${{ !inputs.whiskers-version }}
       shell: bash
       id: what_version
-      run: what-version ${{ toJson(steps.find.outputs.VERSION_REQUIREMENTS) }} ${{ toJson(steps.ghapi.outputs.WHISKERS_VERSIONS) }}
+      run: what-version "$VERSION_REQUIREMENTS" "$WHISKERS_VERSIONS"
+      env:
+        VERSION_REQUIREMENTS: ${{ steps.find.outputs.VERSION_REQUIREMENTS }}
+        WHISKERS_VERSIONS: ${{ steps.ghapi.outputs.WHISKERS_VERSIONS }}
 
     - name: Download catppuccin/whiskers
       shell: bash
-      run: cargo-binstall catppuccin-whiskers --version ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}  --no-confirm
+      run: cargo-binstall catppuccin-whiskers --version "$WHISKERS_VERSION" --no-confirm
+      env:
+        WHISKERS_VERSION: ${{ inputs.whiskers-version || steps.what_version.outputs.WHAT_VERSION }}
 
 branding:
   icon: "dollar-sign"
