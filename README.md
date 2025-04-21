@@ -16,12 +16,13 @@
 <!-- x-release-please-version -->
 
 ```yaml
-- uses: catppuccin/setup-whiskers@v1.0.0
+- uses: catppuccin/setup-whiskers@v2.0.0
   with:
     # Semver compatible version of catppuccin/whiskers to install.
     # E.g. "2.5", "2.x"
     #
-    # Defaults to the latest version.
+    # Defaults to automatically detecting the latest semver compatible version based on the tera template(s) in the repository.
+    # If no tera templates are found, it will install latest version of catppuccin/whiskers.
     whiskers-version: ""
 
     # GitHub token to authenticate with when installing catppuccin/whiskers.
@@ -32,10 +33,10 @@
 
 ## Examples
 
-### Install the latest version
+### Install latest version OR latest semver compatible version
 
 ```yaml
-- uses: catppuccin/setup-whiskers@v1.0.0
+- uses: catppuccin/setup-whiskers@v2.0.0
 ```
 
 ### Install v2.5.0
@@ -43,7 +44,7 @@
 Equivalent to `=2.5.0`
 
 ```yaml
-- uses: catppuccin/setup-whiskers@v1.0.0
+- uses: catppuccin/setup-whiskers@v2.0.0
   with:
     whiskers-version: "2.5.0"
 ```
@@ -53,7 +54,7 @@ Equivalent to `=2.5.0`
 Equivalent to `>=2.0.0 <3.0.0`
 
 ```yaml
-- uses: catppuccin/setup-whiskers@v1.0.0
+- uses: catppuccin/setup-whiskers@v2.0.0
   with:
     whiskers-version: "2.x" # or just "2"
 ```
