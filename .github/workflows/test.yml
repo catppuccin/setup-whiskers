@@ -23,7 +23,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup catppuccin/whiskers
         uses: ./
         with:
@@ -33,7 +33,7 @@ jobs:
   without-input:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup catppuccin/whiskers
         uses: ./
       - run: whiskers --version # should be latest 2.x
